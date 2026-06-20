@@ -1,0 +1,350 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>박예진의 홈페이지</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
+            background: #f5f0eb;
+            color: #2d2d2d;
+            line-height: 1.6;
+        }
+
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(255,255,255,.92);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            padding: 0 20px;
+            box-shadow: 0 2px 20px rgba(0,0,0,.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+        nav .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #667eea;
+        }
+        nav ul {
+            display: flex;
+            gap: 10px;
+            list-style: none;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #555;
+            font-size: .9rem;
+            padding: 8px 14px;
+            border-radius: 20px;
+            transition: all .2s;
+        }
+        nav ul li a:hover {
+            background: #667eea;
+            color: #fff;
+        }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 5px; }
+        .hamburger span { width: 25px; height: 3px; background: #555; border-radius: 3px; }
+
+        .hero {
+            margin-top: 60px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .hero .avatar {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid rgba(255,255,255,.4);
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,.2);
+            cursor: pointer;
+        }
+        .hero .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .hero h1 { font-size: 3rem; margin-bottom: 10px; }
+        .hero p { font-size: 1.2rem; opacity: .9; }
+        .hero .scroll-down {
+            margin-top: 50px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+
+        .section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 100px 20px;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 60px;
+            color: #333;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            margin: 12px auto 0;
+            border-radius: 4px;
+        }
+
+        .card {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            background: #fff;
+            border-radius: 24px;
+            padding: 35px 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 30px rgba(0,0,0,.06);
+            transition: transform .3s ease, box-shadow .3s ease;
+        }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(0,0,0,.1); }
+        .card:nth-child(even) { flex-direction: row-reverse; }
+        .card-img {
+            flex: 0 0 280px;
+            height: 280px;
+            border-radius: 18px;
+            overflow: hidden;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform .4s ease;
+        }
+        .card-img:hover img { transform: scale(1.08); }
+        .card-text { flex: 1; }
+        .card-text h2 { font-size: 1.8rem; margin-bottom: 8px; color: #333; }
+        .card-text .tag {
+            display: inline-block;
+            background: #667eea;
+            color: #fff;
+            font-size: .8rem;
+            padding: 3px 14px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+        .card-text p { color: #555; font-size: 1.05rem; }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: #2d2d2d;
+            color: #aaa;
+            font-size: .9rem;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.85);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .lightbox.show { display: flex; }
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 50px rgba(0,0,0,.5);
+        }
+        .lightbox .close {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: #fff;
+            font-size: 3rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        @media (max-width: 768px) {
+            nav ul { display: none; }
+            nav ul.open { display: flex; flex-direction: column; position: absolute; top: 60px; left: 0; right: 0; background: #fff; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,.1); gap: 5px; }
+            .hamburger { display: flex; }
+            .hero h1 { font-size: 2rem; }
+            .hero .avatar { width: 150px; height: 150px; }
+            .card, .card:nth-child(even) { flex-direction: column; padding: 25px; }
+            .card-img { flex: unset; width: 100%; height: 220px; }
+            .section { padding: 60px 15px; }
+            .section-title { font-size: 1.5rem; margin-bottom: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">🌸 박예진</div>
+    <button class="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+    </button>
+    <ul id="navMenu">
+        <li><a href="#about">자기소개</a></li>
+        <li><a href="#cat">고양이</a></li>
+        <li><a href="#major">전공</a></li>
+        <li><a href="#season">겨울</a></li>
+        <li><a href="#sea">바다</a></li>
+        <li><a href="#hobby">취미</a></li>
+        <li><a href="#character">캐릭터</a></li>
+    </ul>
+</nav>
+
+<section class="hero">
+    <div class="avatar" onclick="openLightbox('IMG_5510 (1).jpeg')">
+        <img src="IMG_5510 (1).jpeg" alt="박예진" />
+    </div>
+    <h1>안녕하세요, 박예진입니다!</h1>
+    <p>저의 홈페이지에 오신 것을 환영합니다 🎉</p>
+    <a class="scroll-down" href="#about">⌄</a>
+</section>
+
+<div class="section" id="about">
+    <h2 class="section-title">자기소개</h2>
+    <div class="card">
+        <div class="card-img">
+            <img src="IMG_5510 (1).jpeg" alt="내 얼굴" onclick="openLightbox(this.src)" />
+        </div>
+        <div class="card-text">
+            <span class="tag">자기소개</span>
+            <h2>👤 박예진</h2>
+            <p>나이: 17세<br>배미고 1학년입니다! 만나서 반가워요.</p>
+        </div>
+    </div>
+</div>
+
+<div class="section" id="cat">
+    <h2 class="section-title">🐱 좋아하는 동물</h2>
+    <div class="card">
+        <div class="card-img">
+            <img src="IMG_3407.jpeg" alt="고양이" onclick="openLightbox(this.src)" />
+        </div>
+        <div class="card-text">
+            <span class="tag">좋아하는 동물</span>
+            <h2>🐱 고양이</h2>
+            <p>제가 좋아하는 동물은 고양이입니다.</p>
+        </div>
+    </div>
+</div>
+
+<div class="section" id="major">
+    <h2 class="section-title">🏥 전공</h2>
+    <div class="card">
+        <div class="card-img">
+            <img src="IMG_4154.jpeg" alt="보건간호과" onclick="openLightbox(this.src)" />
+        </div>
+        <div class="card-text">
+            <span class="tag">전공</span>
+            <h2>🏥 보건간호과</h2>
+            <p>저의 전공은 보건간호입니다.</p>
+        </div>
+    </div>
+</div>
+
+<div class="section" id="season">
+    <h2 class="section-title">❄️ 좋아하는 계절</h2>
+    <div class="card">
+        <div class="card-img">
+            <img src="IMG_3004.jpeg" alt="겨울" onclick="openLightbox(this.src)" />
+        </div>
+        <div class="card-text">
+            <span class="tag">좋아하는 계절</span>
+            <h2>❄️ 겨울</h2>
+            <p>제가 좋아하는 계절은 겨울입니다.</p>
+        </div>
+    </div>
+</div>
+
+<div class="section" id="sea">
+    <h2 class="section-title">🌊 좋아하는 장소</h2>
+    <div class="card">
+        <div class="card-img">
+            <img src="IMG_2966.jpeg" alt="바다" onclick="openLightbox(this.src)" />
+        </div>
+        <div class="card-text">
+            <span class="tag">좋아하는 장소</span>
+            <h2>🌊 바다</h2>
+            <p>제가 좋아하는 장소는 파도가 이쁜 바다입니다.</p>
+        </div>
+    </div>
+</div>
+
+<div class="section" id="hobby">
+    <h2 class="section-title">🎨 취미</h2>
+    <div class="card">
+        <div class="card-img">
+            <img src="IMG_8151.jpeg" alt="그림" onclick="openLightbox(this.src)" />
+        </div>
+        <div class="card-text">
+            <span class="tag">취미</span>
+            <h2>🎨 그림 그리기</h2>
+            <p>저의 취미는 그림 그리기입니다.</p>
+        </div>
+    </div>
+</div>
+
+<div class="section" id="character">
+    <h2 class="section-title">⭐ 좋아하는 캐릭터</h2>
+    <div class="card">
+        <div class="card-img">
+            <img src="IMG_2995.jpeg" alt="한교동" onclick="openLightbox(this.src)" />
+        </div>
+        <div class="card-text">
+            <span class="tag">좋아하는 캐릭터</span>
+            <h2>⭐ 한교동</h2>
+            <p>제가 좋아하는 캐릭터는 귀여운 교동이입니다.</p>
+        </div>
+    </div>
+</div>
+
+<footer>박예진의 홈페이지 &hearts; 감사합니다!</footer>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="close">&times;</span>
+    <img id="lightbox-img" src="" alt="" />
+</div>
+
+<script>
+    function openLightbox(src) {
+        document.getElementById('lightbox-img').src = src;
+        document.getElementById('lightbox').classList.add('show');
+    }
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('show');
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeLightbox();
+    });
+    function toggleMenu() {
+        document.getElementById('navMenu').classList.toggle('open');
+    }
+</script>
+
+</body>
+</html>
